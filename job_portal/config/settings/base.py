@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -14,7 +15,7 @@ INSTALLED_APPS = [
 ]
 
 LOCAL_APPS = ['apps.core', 'apps.commons', 'apps.account']
-THIRD_PARTY_APPS=[]
+THIRD_PARTY_APPS=['crispy_forms','crispy_bootstrap4']
 INSTALLED_APPS+=THIRD_PARTY_APPS+LOCAL_APPS
 
 MIDDLEWARE = [
@@ -56,7 +57,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -84,5 +84,9 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL='account.User'
+
+CRISPY_TEMPLATE_PACK='bootstrap4'
