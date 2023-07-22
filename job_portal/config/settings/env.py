@@ -16,3 +16,10 @@ messages.SUCCESS: 'alert-success',
 messages.WARNING: 'alert-warning',
 messages.ERROR: 'alert-danger',
 }
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = 'e8614bc4b353eb'
+EMAIL_HOST_PASSWORD = '753ebdea19b2ab'
+EMAIL_PORT = '2525'
+
+

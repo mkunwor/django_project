@@ -1,4 +1,5 @@
 import re
+import random
 from django.contrib.auth import get_user_model,authenticate
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 User=get_user_model()
@@ -27,4 +28,17 @@ def authenticate_user(password, username=None, email=None):
     hasher = PBKDF2PasswordHasher()
     return user if hasher.verify(password,user.password) else None
     
+
+def get_random_key(size):
+    alphabets="ASbvhghaerutRHFSAHFPOhbhjjWWWui059347HVwnbtre7uytpku5tm465swSSDF"
+    random_key=""
+    for i in range(size):
+        random_key=random.choice(alphabets)
+    return random_key
+
+
+def get_base_url(request):
+    return "".join([f'{request.scheme}://',f'{request.get_host()}/'])
+    
+
 

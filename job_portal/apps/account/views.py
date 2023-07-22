@@ -7,6 +7,11 @@ from apps.commons.utils import validate_email, authenticate_user
 from django.contrib.auth import login,logout
 from apps.commons.decorators import redirect_to_home_if_authenticated
 from django.utils.decorators import method_decorator
+from .utils import send_account_activation_mail
+from .models import UserAccountActivationKey
+from django.contrib.auth import get_user_model
+
+User=get_user_model()
 
 @method_decorator(redirect_to_home_if_authenticated,name='get')
 class UserRegistrationView(CreateView):
@@ -25,8 +30,11 @@ class UserRegistrationView(CreateView):
         self.object = None
         form = self.get_form()
         if form.is_valid():
-            messages.success(request,"User Created Successfully")
-            return self.form_valid(form)
+            messages.success(request,"An Activation Email Has Been Sent to You")
+            response= self.form_valid(form)
+            user=self.object
+            send_account_activation_mail(request,user)
+            return response
         else:
             return self.form_invalid(form)
 
@@ -65,6 +73,15 @@ def user_logout(request):
     logout(request)
     messages.success(request,"User Logged Out!!")
     return redirect("home")
+
+def user_account_activation(request,username,key):
+    if UserAccountActivationKey.objects.filter(user__username=username,key=key):
+        User.objects.filter(username=username).update(account_activated=True)
+        UserAccountActivationKey.objects.filter(user__username=username).delete()
+        messages.success(request,"Your Account has been Activated!!")
+    else:
+        messages.error(request,'Invalid Link OR The Link Has Been Expired!!')
+    return redirect('user_login')
 
 
         
