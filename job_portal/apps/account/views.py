@@ -127,7 +127,10 @@ class UserProfileUpdateView(CreateView):
 
             return redirect('user_profile')
         else:
-            messages.error(request,"Invalid Request Data!!!")
+            # error_dict = forms.errors.get_json_data()
+            # error_dict_values = list(error_dict.values())
+            # error_messg=error_dict_values[0][0].get("message")
+            messages.error(request,form.errors)
             return self.form_invalid(form)
 
 
