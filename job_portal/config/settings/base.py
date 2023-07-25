@@ -85,8 +85,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
+#STATIC_ROOT =os.path.join(BASE_DIR,"static_pod") python manage.py collectstatic
+MEDIA_URL='media/'
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL='account.User'
 
 CRISPY_TEMPLATE_PACK='bootstrap4'
+
+LOGIN_URL="user_login"

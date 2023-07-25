@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView,TemplateView
 from .forms import UserRegistrationForm,UserLoginForm
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -8,8 +8,10 @@ from django.contrib.auth import login,logout
 from apps.commons.decorators import redirect_to_home_if_authenticated
 from django.utils.decorators import method_decorator
 from .utils import send_account_activation_mail
-from .models import UserAccountActivationKey
+from .models import UserAccountActivationKey,UserProfile
 from django.contrib.auth import get_user_model
+from .forms import UserProfileForm
+from django.contrib.auth.decorators import login_required
 
 User=get_user_model()
 
@@ -84,4 +86,51 @@ def user_account_activation(request,username,key):
     return redirect('user_login')
 
 
+
+@method_decorator(login_required,name='dispatch')
+class UserProfileView(TemplateView):
+    template_name = 'account/user_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "User Profile"
+        return context
+
+
+@method_decorator(login_required,name='dispatch')
+class UserProfileUpdateView(CreateView):
+    template_name = "account/user_profile_update.html"
+    form_class = UserProfileForm
+    success_url = reverse_lazy('user_profile')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Profile Update"
+        return context
+    
+    def post(self,request,*args, **kwargs):
+        self.object=None
+        form=self.get_form()
+        if form.is_valid():
+            resume=form.cleaned_data.pop('resume',None) #gives None for resume if not found
+            pp=form.cleaned_data.pop('profile_picture')
+
+            up,_=UserProfile.objects.update_or_create(user=self.request.user,defaults=form.cleaned_data) #_ for created if that variable isnot used
+            if resume or pp:
+                if resume:
+                    up.resume=resume
+                if pp:
+                    up.profile_picture=pp
+                up.save()
+
+            messages.success(request,"Your profile has been updated!!")
+
+            return redirect('user_profile')
+        else:
+            messages.error(request,"Invalid Request Data!!!")
+            return self.form_invalid(form)
+
+
+
+        
         
