@@ -17,7 +17,7 @@ class Category(BaseModel):
 
 class Job(BaseModel):
     title = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
+    description = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="category_jobs")
     application_deadline = models.DateField()
     is_active = models.BooleanField(default=False)
