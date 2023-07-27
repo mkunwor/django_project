@@ -18,5 +18,10 @@ crossorigin="anonymous"></script>
 <body>
     {% include 'includes/message.html' %}
 {% block content %}{% endblock %}
+<script>
+    function login_required(){
+        alert("Must be logged in to apply for a job")
+    }
+</script>
 </body>
 </html>
