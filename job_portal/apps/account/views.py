@@ -6,12 +6,14 @@ from django.contrib import messages
 from apps.commons.utils import validate_email, authenticate_user
 from django.contrib.auth import login,logout
 from apps.commons.decorators import redirect_to_home_if_authenticated
+from apps.commons.utils import is_profile_complete
 from django.utils.decorators import method_decorator
 from .utils import send_account_activation_mail
 from .models import UserAccountActivationKey,UserProfile
 from django.contrib.auth import get_user_model
 from .forms import UserProfileForm
 from django.contrib.auth.decorators import login_required
+
 
 User=get_user_model()
 
@@ -94,6 +96,7 @@ class UserProfileView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = "User Profile"
+        context['is_profile_complete']=is_profile_complete(self.request.user)
         return context
 
 

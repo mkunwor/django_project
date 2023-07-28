@@ -40,5 +40,10 @@ def get_random_key(size):
 def get_base_url(request):
     return "".join([f'{request.scheme}://',f'{request.get_host()}/'])
     
-
-
+def is_profile_complete(user):
+    try:
+        profile = user.userprofile
+    except:
+        return False
+    return all([user.account_activated, profile.phone_number, profile.address, profile.resume])
+   #all and any returns true or false
